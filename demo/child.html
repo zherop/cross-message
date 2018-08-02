@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Iframe</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="../messenger.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <p>
+            <span class="label label-danger">iframe</span>
+            domain:
+            <script>document.write('(' + location.protocol + '//' + location.host + ')');</script>
+        </p>
+
+        <p>
+            <input type="text" placeholder="输入消息" id="message" />
+            <button type="button" class="btn btn-primary" onclick="sendMessage();">send to parent</button>
+        </p>
+        <pre id="output" class="alert alert-warning"></pre>
+    </div>
+
+    <script>
+        var input = document.getElementById('message');
+        var messenger = new Messenger(window.opener)
+
+        //监听
+        messenger.listen('Parent2Child', function (msg) {
+            var text = document.createTextNode(msg + '\n');
+            document.getElementById('output').appendChild(text);
+        })
+
+        // 开启调试
+        messenger.openDebugger()
+
+        function sendMessage() {
+            messenger.send('Child2Parent', input.value)
+        }
+    </script>
+</body>
+
+</html>
